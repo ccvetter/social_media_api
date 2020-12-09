@@ -34,4 +34,22 @@ router.post("/", async (req, res) => {
     });
 });
 
+router.post("/edit", async (req, res) => {
+    let id = req.body._id;
+    delete req.body._id;
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let user = await User.findById(id);
+    if (!user) return res.status(500).send("User not found.");
+
+    if (req.body.password) {
+        req.body.password = await bcrypt.hash(user.password, 10);
+    } else {
+        delete req.body.password;
+    }
+    await user.update(req.body, { $set: { "user.$.done": true }});
+    res.status(200).send("User updated.");
+});
+
 module.exports = router;
