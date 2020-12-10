@@ -4,6 +4,7 @@ const cors = require('cors');
 const jwt = require('./helpers/jwt');
 const bodyParser = require('body-parser');
 const errorHandler = require('./helpers/error_handler');
+require('./config/config.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

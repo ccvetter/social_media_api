@@ -1,11 +1,11 @@
 const expressJwt = require('express-jwt');
-const config = require('config');
+// const config = require('config');
 const userService = require('../users/users.service');
 
 module.exports = jwt;
 
 function jwt() {
-    const secret = config.secret;
+    const secret = global.Config.secret;
 
     return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
         path: [
