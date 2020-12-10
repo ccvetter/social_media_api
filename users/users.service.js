@@ -15,7 +15,8 @@ module.exports = {
 
 async function authenticate({ email, password }) {
     const user = await User.findOne({ email });
-    if (user && bcrypt.compareSync(password, user.hash)) {
+    console.log(bcrypt.compareSync(password, user.password))
+    if (user && bcrypt.compareSync(password, user.password)) {
         const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '10d' });
         return {
             ...user.toJSON(),
@@ -40,7 +41,7 @@ async function create(userParam) {
     const user = new User(userParam);
 
     if (userParam.password) {
-        user.hash = bcrypt.hashSync(userParam.password, 10);
+        user.password = bcrypt.hashSync(userParam.password, 10);
     }
 
     await user.save();
