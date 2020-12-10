@@ -1,0 +1,14 @@
+{
+    "development": {
+        "secret": "secret",
+        "connectionString": "mongodb://localhost/social_media"
+    },
+    "test": {
+        "secret": "secret",
+        "connectionString": "mongodb://localhost/social_media_test"
+    },
+    "production": {
+        "secret": "secret",
+        "connectionString": "mongodb://localhost/social_media"
+    }
+}
