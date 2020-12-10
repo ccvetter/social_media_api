@@ -15,7 +15,6 @@ module.exports = {
 
 async function authenticate({ email, password }) {
     const user = await User.findOne({ email });
-    console.log(bcrypt.compareSync(password, user.password))
     if (user && bcrypt.compareSync(password, user.password)) {
         const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '10d' });
         return {
@@ -38,8 +37,7 @@ async function create(userParam) {
         throw 'Email "' + userParam.email + '" already exists';
     }
 
-    const user = new User(userParam);
-
+    const user = new User(userParam)
     if (userParam.password) {
         user.password = bcrypt.hashSync(userParam.password, 10);
     }
