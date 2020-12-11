@@ -15,13 +15,12 @@ describe('Users', () => {
     });
 
     describe('/GET user', () => {
-        it('it should GET all the users', (done) => {
+        it('should get a 401 without a token', (done) => {
             chai.request(server)
                 .get('/api/users')
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    res.body.length.should.be.eql(0);
+                    res.should.have.status(401);
+                    JSON.parse(res.error.text).message.should.be.eql('Invalid Token')
                     done();
                 });
         });
