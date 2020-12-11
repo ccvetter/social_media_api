@@ -4,7 +4,13 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-    name: {
+    firstName: {
+        type: String,
+        require: true,
+        minlength: 3,
+        maxlength: 50
+    },
+    lastName: {
         type: String,
         require: true,
         minlength: 3,
@@ -29,13 +35,14 @@ const UserSchema = new mongoose.Schema({
 UserSchema.methods.generateAuthToken = function() {
     const token = jwt.sign({_id: this._id, isAdmin: this.isAdmin }, config.get('privatekey'));
     return token;
-}
+};
 
 const User = mongoose.model('User', UserSchema);
 
 function validateUser(user) {
     const schema = Joi.object({
-        name: Joi.string().min(3).max(50).required(),
+        firstName: Joi.string().min(3).max(50).required(),
+        lastName: Joi.string().min(3).max(50).required(),
         email: Joi.string().min(5).max(255).required().email(),
         password: Joi.string().min(3).max(255).required()
     });
