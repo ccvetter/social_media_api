@@ -1,4 +1,5 @@
 const express = require('express');
+const { _delete } = require('./users.service');
 const router = express.Router();
 const userService = require('./users.service');
 
@@ -9,19 +10,24 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
-router.delete('/:id', _delete);
+router.delete('/:id', deleteUser);
 
 module.exports = router;
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Email or password is incorrect' }))
+        .then(user => {
+            user ? res.json(user) : res.status(400).json({ message: 'Email or password is incorrect' })
+        })
         .catch(err => next(err));
 }
 
 function register(req, res, next) {
     userService.create(req.body) 
-        .then(() => res.json({}))
+        .then((user) => {
+            delete user.password;
+            res.json(user);
+        })
         .catch(err => next(err));
 }
 
@@ -49,7 +55,7 @@ function update(req, res, next) {
         .catch(err => next(err));
 }
 
-function _delete(req, res, next) {
+function deleteUser(req, res, next) {
     userService.delete(req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
