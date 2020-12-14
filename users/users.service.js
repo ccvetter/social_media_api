@@ -1,3 +1,5 @@
+'use strict'; 
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
@@ -64,7 +66,16 @@ async function update(id, userParam) {
 }
 
 async function addFriend(id, friendParam) {
-    const user = await User.findOneAndUpdate({ _id: id }, { $addToSet: { friends: friendParam.friend }});
+    const friend = await User.findOne({ _id: friendParam.friend });
+
+    if (!friend) throw 'Friend not found';
+    
+    // Make copy of friend
+    const newFriend = ({...friend}._doc);
+    // Delete friends property to keep record size manageable
+    delete newFriend.friends;
+
+    const user = await User.findOneAndUpdate({ _id: id }, { $addToSet: { friends: newFriend }});
 
     if (!user) throw 'User not found';
     return user;
