@@ -8,5 +8,6 @@ mongoose.Promise = global.Promise;
 
 module.exports = {
     User: require('../users/user.model').User,
-    Post: require('../posts/post.model').Post
+    Post: require('../posts/post.model').Post,
+    Comment: require('../comments/comment.model').Comment
 };

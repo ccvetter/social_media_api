@@ -13,6 +13,7 @@ app.use(jwt());
 // API Routes
 app.use("/api/users", require('./users/users.controller'));
 app.use("/api/posts", require('./posts/posts.controller'));
+app.use("/api/comments", require('./comments/comments.controller'));
 
 app.use(errorHandler);
 
