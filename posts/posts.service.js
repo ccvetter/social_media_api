@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
 const Post = db.Post;
+const User = db.User;
 
 module.exports = {
     getAll,
@@ -20,7 +21,13 @@ async function getById(id) {
 }
 
 async function create(postParam) {
-    const post = new Post(postParam)
+    const user = await User.findById(postParam.userId);
+    if (!user) throw 'User not found';
+
+    const modifiedUser = ({...user}._doc);
+    delete modifiedUser.friends;
+
+    const post = new Post({...postParam, user: user })
 
     await post.save();
 }

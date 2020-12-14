@@ -9,9 +9,11 @@ const PostSchema = new mongoose.Schema({
     },
     userId: {
         type: String,
-        require: true,
-        minlength: 3,
-        maxlength: 80
+        require: true
+    },
+    user: {
+        type: Object,
+        require: true 
     }
 }, { timestamps: true });
 
@@ -19,8 +21,7 @@ const Post = mongoose.model('Post', PostSchema);
 
 function validatePost(post) {
     const schema = Joi.object({
-        text: Joi.string().min(1).required(),
-        userId: Joi.string().guid({ version: 'uuidv4' })
+        text: Joi.string().min(1).required()
     });
 
     return schema.validate(post);
