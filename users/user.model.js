@@ -29,6 +29,9 @@ const UserSchema = new mongoose.Schema({
         minlength: 3,
         maxlength: 255
     },
+    friends: {
+        type: Array
+    },
     isAdmin: Boolean
 }, { timestamps: true });
 

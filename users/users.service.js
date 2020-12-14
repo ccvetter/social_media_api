@@ -9,6 +9,7 @@ module.exports = {
     getById,
     create,
     update,
+    addFriend,
     delete: _delete
 };
 
@@ -37,6 +38,7 @@ async function create(userParam) {
     }
 
     const user = new User(userParam)
+    user.friends.push('');
     if (userParam.password) {
         user.password = bcrypt.hashSync(userParam.password, 10);
     }
@@ -59,6 +61,13 @@ async function update(id, userParam) {
     Object.assign(user, userParam);
 
     await user.save();
+}
+
+async function addFriend(id, friendParam) {
+    const user = await User.findOneAndUpdate({ _id: id }, { $addToSet: { friends: friendParam.friend }});
+
+    if (!user) throw 'User not found';
+    return user;
 }
 
 async function _delete(id) {

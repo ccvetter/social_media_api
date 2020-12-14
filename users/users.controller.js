@@ -10,6 +10,7 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
+router.put('/add_friend/:id', addFriend);
 router.delete('/:id', deleteUser);
 
 module.exports = router;
@@ -51,7 +52,13 @@ function getById(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(() => res.json({}))
+        .then((user) => res.json(user))
+        .catch(err => next(err));
+}
+
+function addFriend(req, res, next) {
+    userService.addFriend(req.params.id, req.body)
+        .then((user) =>res.json(user))
         .catch(err => next(err));
 }
 
