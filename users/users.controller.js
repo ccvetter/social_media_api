@@ -9,6 +9,7 @@ router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.get('/:id', getById);
+router.get('/feed/:id', getFeed);
 router.put('/:id', update);
 router.put('/add_friend/:id', addFriend);
 router.delete('/:id', deleteUser);
@@ -58,7 +59,13 @@ function update(req, res, next) {
 
 function addFriend(req, res, next) {
     userService.addFriend(req.params.id, req.body)
-        .then((user) =>res.json(user))
+        .then((user) => res.json(user))
+        .catch(err => next(err));
+}
+
+function getFeed(req, res, next) {
+    userService.getFeed(req.params.id)
+        .then((feed) => res.json(feed))
         .catch(err => next(err));
 }
 

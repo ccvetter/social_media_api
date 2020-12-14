@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
 const User = db.User;
+const Post = db.Post;
 
 module.exports = {
     authenticate,
@@ -12,6 +13,7 @@ module.exports = {
     create,
     update,
     addFriend,
+    getFeed,
     delete: _delete
 };
 
@@ -79,6 +81,18 @@ async function addFriend(id, friendParam) {
 
     if (!user) throw 'User not found';
     return user;
+}
+
+async function getFeed(id) {
+    const user = await User.findOne({_id: id})
+
+    if (!user) throw 'User not found';
+
+    const feed = Post.find({ userId: user.friends.map(friend => friend._id)});
+    
+    if (!feed) throw 'Feed is empty';
+
+    return feed;
 }
 
 async function _delete(id) {
