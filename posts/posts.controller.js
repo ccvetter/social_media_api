@@ -3,7 +3,7 @@ const router = express.Router();
 const postService = require('./posts.service');
 
 // Routes
-router.post('/', create);
+router.post('/:id', create);
 router.get('/:id', getAll);
 router.get('/post/:id', getById);
 router.put('/:id', update);

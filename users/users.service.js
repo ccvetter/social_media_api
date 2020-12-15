@@ -87,8 +87,8 @@ async function getFeed(id) {
     const user = await User.findOne({_id: id})
 
     if (!user) throw 'User not found';
-
-    const feed = Post.find({ userId: user.friends.map(friend => friend._id)});
+    
+    const feed = Post.find({ userId: [...user.friends.map(friend => friend._id), id]}).sort('-createdAt');
     
     if (!feed) throw 'Feed is empty';
 
