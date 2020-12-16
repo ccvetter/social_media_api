@@ -3,13 +3,16 @@ const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
 const Post = db.Post;
 const User = db.User;
+const Comment = db.Comment;
 
 module.exports = {
     getAll,
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    addLike,
+    getComments
 };
 
 async function getAll(userParam) {
@@ -44,4 +47,43 @@ async function update(id, postParam) {
 
 async function _delete(id) {
     await Post.findByIdAndRemove(id);
+}
+
+async function addLike(id) {
+    await Post.findByIdAndUpdate(id, 
+        { $inc: { likes: 1 }},
+        { new: true }
+    );
+}
+
+async function getComments(id) {
+    const post = await Post.findById(id)
+        .populate({
+            path: 'comment',
+            match: { postId: { $eq: id }}
+        })
+        .exec();
+
+    // console.log();
+
+    if (!post) throw 'Post not found';
+
+    post.on('data', (doc) => {
+        res.write(doc);
+    });
+
+    post.on('close', () => {
+        return post;
+    });
+    // const comments = 
+    // console.log(post.comments)
+    // await Comment.find({ postId: { $in: post.comments }}, function(err, comments) {
+    //     console.log(comments)
+    // });
+    // console.log(comments)
+    // return comments;
+    // return await Comment.find()
+    //                 .populate({
+    //                     match
+    //                 });
 }

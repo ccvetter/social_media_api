@@ -6,7 +6,9 @@ const postService = require('./posts.service');
 router.post('/:id', create);
 router.get('/:id', getAll);
 router.get('/post/:id', getById);
+router.get('/:id/comments', getComments);
 router.put('/:id', update);
+router.put('/like/:id', addLike);
 router.delete('/:id', _delete);
 
 module.exports = router;
@@ -38,5 +40,17 @@ function update(req, res, next) {
 function _delete(req, res, next) {
     postService.delete(req.params.id)
         .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function addLike(req, res, next) {
+    postService.addLike(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function getComments(req, res, next) {
+    postService.getComments(req.params.id)
+        .then((comments) => res.json(comments))
         .catch(err => next(err));
 }

@@ -20,9 +20,11 @@ async function getById(id) {
 }
 
 async function create(commentParam) {
-    const comment = new Comment(commentParam);
-
-    await comment.save();
+    return await db.Comment.create(commentParam).then(comment => {
+        return db.Post.findByIdAndUpdate(commentParam.postId,
+            { $push: { comments: comment._id }},
+            { new: true, useFindAndModify: false});
+    });
 }
 
 async function update(id, commentParam) {

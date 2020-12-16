@@ -14,6 +14,13 @@ const PostSchema = new mongoose.Schema({
     user: {
         type: Object,
         require: true 
+    },
+    comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
+    }],
+    likes: {
+        type: Number
     }
 }, { timestamps: true });
 
@@ -21,7 +28,8 @@ const Post = mongoose.model('Post', PostSchema);
 
 function validatePost(post) {
     const schema = Joi.object({
-        text: Joi.string().min(1).required()
+        text: Joi.string().min(1).required(),
+        userId: Joi.required()
     });
 
     return schema.validate(post);
