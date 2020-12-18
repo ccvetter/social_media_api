@@ -16,7 +16,7 @@ module.exports = {
 };
 
 async function getAll(userParam) {
-    return await Post.find({ userId: userParam });
+    return await Post.find({ userId: userParam }).populate('comments').exec();
 }
 
 async function getById(id) {
@@ -57,33 +57,9 @@ async function addLike(id) {
 }
 
 async function getComments(id) {
-    const post = await Post.findById(id)
-        .populate({
-            path: 'comment',
-            match: { postId: { $eq: id }}
-        })
-        .exec();
+    const comments = await Comment.find({ postId: id });
 
-    // console.log();
+    if (!comments) throw 'Post not found';
 
-    if (!post) throw 'Post not found';
-
-    post.on('data', (doc) => {
-        res.write(doc);
-    });
-
-    post.on('close', () => {
-        return post;
-    });
-    // const comments = 
-    // console.log(post.comments)
-    // await Comment.find({ postId: { $in: post.comments }}, function(err, comments) {
-    //     console.log(comments)
-    // });
-    // console.log(comments)
-    // return comments;
-    // return await Comment.find()
-    //                 .populate({
-    //                     match
-    //                 });
+    return comments;
 }
